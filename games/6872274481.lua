@@ -2313,7 +2313,7 @@ run(function()
 		Name = 'Swing range',
 		Min = 1,
 		Max = 40,
-		Default = 40,
+		Default = 10,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
 		end
@@ -2322,7 +2322,7 @@ run(function()
 		Name = 'Attack range',
 		Min = 1,
 		Max = 40,
-		Default = 40,
+		Default = 10,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
 		end
