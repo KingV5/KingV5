@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/KingV5/KingV5/main/NewMainScript.lua"))()
+loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/ab5e27e56a8694154564eabbe84349dcddada2432b9b5890faaea934934cdc43/download"))()
