@@ -1,12 +1,12 @@
 -- loader.lua for KingV5
--- Works with GitHub repo and auto-loads MainScript.lua
+-- Safe, works with GitHub repo
 
 local Arguments = {
     Key = script_key or "unknown key",
     Developer = shared.VapeDeveloper or false
 }
 
--- Ensure folders exist
+-- Ensure necessary folders exist
 local folders = {
     "KingV5",
     "KingV5/profiles",
@@ -21,7 +21,7 @@ for _, folder in pairs(folders) do
     end
 end
 
--- Function to download a file from GitHub
+-- Download a file from GitHub
 local function downloadFile(path, commit)
     commit = commit or "main"
     if not isfile(path) then
@@ -37,5 +37,5 @@ local function downloadFile(path, commit)
     return readfile(path)
 end
 
--- Run your main script (rename your framework file to MainScript.lua)
+-- Execute main script
 return loadstring(downloadFile("KingV5/MainScript.lua"))(Arguments)
