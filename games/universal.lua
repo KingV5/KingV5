@@ -2460,14 +2460,14 @@ run(function()
 	CPS = Killaura:CreateTwoSlider({
 		Name = 'Attacks per Second',
 		Min = 1,
-		Max = 20,
+		Max = 40,
 		DefaultMin = 12,
 		DefaultMax = 12
 	})
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 30,
+		Max = 40,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -2476,7 +2476,7 @@ run(function()
 	AttackRange = Killaura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 30,
+		Max = 40,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
