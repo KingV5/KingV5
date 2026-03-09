@@ -2,10 +2,12 @@ local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
 	end)
-	return suc and res ~= nil and res ~= ''
+	return suc and res ~= nil and res ~= ""
 end
 
 local function downloadFile(path)
+	local data
+
 	if not isfile(path) then
 		local suc, res = pcall(function()
 			return game:HttpGet(
@@ -19,10 +21,13 @@ local function downloadFile(path)
 			error("Failed to download "..path)
 		end
 
+		data = res
 		writefile(path, res)
+	else
+		data = readfile(path)
 	end
 
-	return readfile(path)
+	return data
 end
 
 -- create folders
@@ -39,8 +44,6 @@ for _, folder in {
 	end
 end
 
--- download universal.lua
-downloadFile("KingV5/games/universal.lua")
-
--- run universal.lua
-return loadstring(readfile("KingV5/games/universal.lua"), "universal")()
+-- download + run universal.lua
+local scriptData = downloadFile("KingV5/games/universal.lua")
+return loadstring(scriptData, "universal")()
