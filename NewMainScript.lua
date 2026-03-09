@@ -1,55 +1,55 @@
-local Arguments = ... or {}
-if not Arguments.Key then
-    Arguments.Key = script_key or 'unknown key'
+-- MainScript.lua for KingV5
+-- Framework for modules
+
+local Arguments = Arguments or {}
+local Key = Arguments.Key or "unknown key"
+
+shared.vape = shared.vape or {}
+local vape = shared.vape
+
+vape.Libraries = vape.Libraries or {}
+vape.Libraries.entity = vape.Libraries.entity or {}
+vape.Libraries.targetinfo = vape.Libraries.targetinfo or {}
+vape.Libraries.sessioninfo = vape.Libraries.sessioninfo or {}
+vape.Libraries.uipallet = vape.Libraries.uipallet or {}
+vape.Libraries.tween = vape.Libraries.tween or {}
+vape.Libraries.color = vape.Libraries.color or {}
+vape.Libraries.whitelist = vape.Libraries.whitelist or {}
+vape.Libraries.prediction = vape.Libraries.prediction or {}
+vape.Libraries.getfontsize = vape.Libraries.getfontsize or {}
+vape.Libraries.getcustomasset = vape.Libraries.getcustomasset or getcustomasset
+
+local store = {
+    attackReach = 0,
+    attackReachUpdate = tick(),
+    inventory = {items={}, armor={}},
+    hotbar = {},
+    inventories = {},
+    matchState = 0,
+    tools = {}
+}
+
+local bedwars = {
+    ItemMeta = {},
+    ProjectileMeta = {}
+}
+
+local playersService = game:GetService("Players")
+local lplr = playersService.LocalPlayer
+local runService = game:GetService("RunService")
+local collectionService = game:GetService("CollectionService")
+
+local function loadModule(path)
+    local code = readfile(path)
+    return loadstring(code)()
 end
 
-if shared.VapeDeveloper then
-    return loadstring(readfile('catrewrite/loader.lua'), 'loader.lua')(Arguments)
-else
-    if not isfolder('catrewrite') then
-        makefolder('catrewrite')
-    end
-
-    if not isfolder('catrewrite/profiles') then
-        makefolder('catrewrite/profiles')
-    end
-
-    local _, subbed = pcall(function()
-        return game:HttpGet('https://github.com/MaxlaserTech/CatV6')
-    end)
-
-    local commit = subbed:find('currentOid')
-    commit = commit and subbed:sub(commit + 13, commit + 52) or nil
-    commit = commit and #commit == 40 and commit or 'main'
-    Arguments.Commit = commit
-
-    local function downloadFile(path, func)
-        if not isfile(path) or (not isfile('catrewrite/profiles/commit.txt') or readfile('catrewrite/profiles/commit.txt') ~= commit) and not shared.VapeDeveloper then
-            local suc, res = pcall(function()
-                return game:HttpGet('https://raw.githubusercontent.com/MaxlaserTech/CatV6/'.. commit.. '/' ..select(1, path:gsub('catrewrite/', '')), true)
-            end)
-            print('updated')
-            if not suc or res == '404: Not Found' then
-                error(res)
-            end
-            if path:find('.lua') then
-                res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
-            end
-            writefile(path, res)
-        end
-        return (func or readfile)(path)
-    end
-
-    if getconnections and not shared.catdebug then
-        for _, v in getconnections(cloneref(game:GetService('ScriptContext')).Error) do
-            v:Disable()
-        end
-
-        for _, v in getconnections(cloneref(game:GetService('LogService')).MessageOut) do
-            v:Disable()
-        end
-    end
-
-    shared.VapeDeveloper = Arguments.Developer
-    return loadstring(downloadFile('catrewrite/loader.lua'), 'loader.lua')(Arguments)
+local universalModule
+if isfile("KingV5/games/universal.lua") then
+    universalModule = loadModule("KingV5/games/universal.lua")
 end
+
+vape.store = store
+vape.bedwars = bedwars
+vape.LocalPlayer = lplr
+vape.playersService = playersService
