@@ -2379,7 +2379,7 @@ end)
 
 shared.vape.Attacking = false
 run(function()
-	local Killaura
+	local 
 	local Targets
 	local CPS
 	local SwingRange
@@ -2408,8 +2408,8 @@ run(function()
 		return tool and tool:FindFirstChildWhichIsA('TouchTransmitter', true) or nil, tool
 	end
 
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	 = vape.Categories.Blatant:CreateModule({
+		Name = '',
 		Function = function(callback)
 			if callback then
 				repeat
@@ -2503,7 +2503,7 @@ run(function()
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 30,
+		Max = 40,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -2512,7 +2512,7 @@ run(function()
 	AttackRange = Killaura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 30,
+		Max = 40,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
