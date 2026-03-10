@@ -1,68 +1,54 @@
-task.spawn(function()
-    repeat task.wait() until game:GetService("CoreGui"):FindFirstChild("VapeGui")
-    for _, v in pairs(game:GetService("CoreGui").VapeGui:GetDescendants()) do
-        if v:IsA("TextLabel") and (v.Text == "Vape v4" or v.Text == "Vape") then
-            v.Text = "KingV5"
-        end
-    end
+local Arguments = ... or {}
+if not Arguments.Key then
+    Arguments.Key = script_key or 'unknown key'
+end
+
+local _, subbed = pcall(function()
+    return game:HttpGet('https://github.com/MaxlaserTech/CatV6')
 end)
 
-local isfile = isfile or function(file)
-	local suc, res = pcall(function()
-		return readfile(file)
-	end)
-	return suc and res ~= nil and res ~= ''
-end
-local delfile = delfile or function(file)
-	writefile(file, '')
-end
+local commit = subbed:find('currentOid')
+commit = commit and subbed:sub(commit + 13, commit + 52) or nil
+commit = commit and #commit == 40 and commit or 'main'
+Arguments.Commit = commit
 
-local function downloadFile(path, func)
-	if not isfile(path) then
-		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
-		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
-		end
-		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
-		end
-		writefile(path, res)
-	end
-	return (func or readfile)(path)
-end
+if shared.VapeDeveloper then
+    return loadstring(readfile('catrewrite/loader.lua'), 'loader.lua')(Arguments)
+else
+    if not isfolder('catrewrite') then
+        makefolder('catrewrite')
+    end
 
-local function wipeFolder(path)
-	if not isfolder(path) then return end
-	for _, file in listfiles(path) do
-		if file:find('loader') then continue end
-		if isfile(file) and select(1, readfile(file):find('--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.')) == 1 then
-			delfile(file)
-		end
-	end
-end
+    if not isfolder('catrewrite/profiles') then
+        makefolder('catrewrite/profiles')
+    end
 
-for _, folder in {'newvape', 'newvape/games', 'newvape/profiles', 'newvape/assets', 'newvape/libraries', 'newvape/guis'} do
-	if not isfolder(folder) then
-		makefolder(folder)
-	end
-end
+    local function downloadFile(path, func)
+        if not isfile(path) or (not isfile('catrewrite/profiles/commit.txt') or readfile('catrewrite/profiles/commit.txt') ~= commit) and not shared.VapeDeveloper then
+            local suc, res = pcall(function()
+                return game:HttpGet('https://raw.githubusercontent.com/MaxlaserTech/CatV6/'.. commit.. '/' ..select(1, path:gsub('catrewrite/', '')), true)
+            end)
+            if not suc or res == '404: Not Found' then
+                error(res)
+            end
+            if path:find('.lua') then
+                res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
+            end
+            writefile(path, res)
+        end
+        return (func or readfile)(path)
+    end
 
-if not shared.VapeDeveloper then
-	local _, subbed = pcall(function()
-		return game:HttpGet('https://github.com/7GrandDadPGN/VapeV4ForRoblox')
-	end)
-	local commit = subbed:find('currentOid')
-	commit = commit and subbed:sub(commit + 13, commit + 52) or nil
-	commit = commit and #commit == 40 and commit or 'main'
-	if commit == 'main' or (isfile('newvape/profiles/commit.txt') and readfile('newvape/profiles/commit.txt') or '') ~= commit then
-		wipeFolder('newvape')
-		wipeFolder('newvape/games')
-		wipeFolder('newvape/guis')
-		wipeFolder('newvape/libraries')
-	end
-	writefile('newvape/profiles/commit.txt', commit)
-end
+    if getconnections and not shared.catdebug then
+        for _, v in getconnections(cloneref(game:GetService('ScriptContext')).Error) do
+            v:Disable()
+        end
 
-return loadstring(downloadFile('newvape/main.lua'), 'main')()
+        for _, v in getconnections(cloneref(game:GetService('LogService')).MessageOut) do
+            v:Disable()
+        end
+    end
+
+    shared.VapeDeveloper = Arguments.Developer
+    return loadstring(downloadFile('catrewrite/loader.lua'), 'loader.lua')(Arguments)
+end
