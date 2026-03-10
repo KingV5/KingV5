@@ -1,22 +1,16 @@
--- Lines 1–60: fixed universal.lua
-
--- store original loadstring to avoid recursion
-local real_loadstring = loadstring
 local loadstring = function(...)
-	local res, err = real_loadstring(...)
+	local res, err = loadstring(...)
 	if err and vape then
 		vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert')
 	end
 	return res
 end
-
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
 		return readfile(file)
 	end)
 	return suc and res ~= nil and res ~= ''
 end
-
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
@@ -32,17 +26,14 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-
 local run = function(func)
 	func()
 end
-
 local queue_on_teleport = queue_on_teleport or function() end
 local cloneref = cloneref or function(obj)
 	return obj
 end
 
--- services
 local playersService = cloneref(game:GetService('Players'))
 local replicatedStorage = cloneref(game:GetService('ReplicatedStorage'))
 local runService = cloneref(game:GetService('RunService'))
@@ -61,25 +52,12 @@ local coreGui = cloneref(game:GetService('CoreGui'))
 local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
 	return true
 end
-
 local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('Camera')
 local lplr = playersService.LocalPlayer
 local assetfunction = getcustomasset
 
--- ======= STUB: ensure vape.Libraries exists =======
-local vape = shared.vape or {}
-vape.Libraries = vape.Libraries or {}
-vape.Libraries.tween = vape.Libraries.tween or {}
-vape.Libraries.entity = vape.Libraries.entity or {}
-vape.Libraries.color = vape.Libraries.color or {}
-vape.Libraries.whitelist = vape.Libraries.whitelist or {}
-vape.Libraries.prediction = vape.Libraries.prediction or {}
-vape.Libraries.getfontsize = vape.Libraries.getfontsize or {}
-vape.Libraries.getcustomasset = vape.Libraries.getcustomasset or {}
-shared.vape = vape
--- =============================================
-
-local tween = {}  -- optional stub
+local vape = shared.vape
+local tween = vape.Libraries.tween
 local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
 local getcustomasset = vape.Libraries.getcustomasset
@@ -2482,14 +2460,14 @@ run(function()
 	CPS = Killaura:CreateTwoSlider({
 		Name = 'Attacks per Second',
 		Min = 1,
-		Max = 40,
+		Max = 20,
 		DefaultMin = 12,
 		DefaultMax = 12
 	})
 	SwingRange = Killaura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 40,
+		Max = 30,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
@@ -2498,7 +2476,7 @@ run(function()
 	AttackRange = Killaura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 40,
+		Max = 30,
 		Default = 13,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
